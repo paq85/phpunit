@@ -56,6 +56,7 @@ class Framework_SuiteTest extends PHPUnit_Framework_TestCase
         $suite->addTest(new self('testIncompleteTestDataProvider'));
         $suite->addTest(new self('testRequirementsBeforeClassHook'));
         $suite->addTest(new self('testDontSkipInheritedClass'));
+        $suite->addTest(new self('testDontSkipAutoloadedClass'));
 
         return $suite;
     }
@@ -252,6 +253,20 @@ class Framework_SuiteTest extends PHPUnit_Framework_TestCase
 
         $suite->addTestFile($dir . 'InheritanceA.php');
         $suite->addTestFile($dir . 'InheritanceB.php');
+        $result = $suite->run();
+        $this->assertEquals(2, count($result));
+    }
+
+    public function testDontSkipAutoloadedClass()
+    {
+        $suite = new PHPUnit_Framework_TestSuite(
+            'DontSkipAutoloadedClass'
+        );
+
+        $dir = dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'Autoloading' . DIRECTORY_SEPARATOR;
+
+        $suite->addTestFile($dir . 'Autoloading.php');
+        $suite->addTestFile($dir . 'WasAutoloaded.php');
         $result = $suite->run();
         $this->assertEquals(2, count($result));
     }
